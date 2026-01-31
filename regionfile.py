@@ -7,7 +7,7 @@ from shapely import geometry
 regions = ["atl", "gom", "nwatl", "nwatl", "subtropatl", 
            "ncatl", "neatl", "carib", "opentropatl", "etropatl", 
            "aew", "wpac", "ph", "med", "cmed", 
-           "emed", "global", "southwest_indian", "map", "list"]
+           "emed", "global", "southwest_indian", "mozchannel", "map", "list"]
 
 def regionselector(region):
 
@@ -140,12 +140,20 @@ def regionselector(region):
         dataset = "all"
 
     elif region == "southwest_indian":
-        lat_min = -40
+           lat_min = -40
         lat_max = 0
         lon_min = 20
         lon_max = 90
         region = "South-West Indian Ocean"
         dataset = "jtwc_sh"
+
+    elif region == "mozchannel":
+           lat_min = -25
+           lat_max = -12
+           lon_min = 30
+           lon_max = 48
+           region = "Mozambique Channel"
+           dataset = "jtwc_sh"
 
     elif region == "map":
         # Create a single figure for all regions
@@ -181,3 +189,4 @@ def regionselector(region):
         return None, None, None, None, None, None 
 
     return lat_min, lat_max, lon_min, lon_max, region, dataset
+
