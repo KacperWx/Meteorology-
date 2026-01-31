@@ -1,4 +1,4 @@
-# !pip install cartopy
+!pip install cartopy
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -17,12 +17,19 @@ minwind = 34
 climo_years = np.arange(1991, 2021) # climatology base period (1991-2020 inclusive)
 
 # -----------------------
-region = 'global'
+region = 'list'
+
+if region in ("map", "list"):
+    rf.regionselector(region)   # plotting only
+    raise SystemExit("Plotting-only mode; no data filtering performed.")
 # dataset = "hurdat_atl" # "nhc_working_bt"
 
 # -----------------------
 # region selector function:
 lat_min, lat_max, lon_min, lon_max, region, dataset = rf.regionselector(region)
+
+if region == 'map' or region == 'list':
+    raise ValueError("Plotting-only mode and cannot be used for data filtering.")
 
 # -------------------------
 
