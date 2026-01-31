@@ -1,4 +1,13 @@
-# Region Selection File
+import matplotlib.pyplot as plt
+import numpy as np
+import cartopy.feature as cfeature
+import cartopy.crs as ccrs
+from shapely import geometry
+
+regions = ["atl", "gom", "nwatl", "nwatl", "subtropatl", 
+           "ncatl", "neatl", "carib", "opentropatl", "etropatl", 
+           "aew", "wpac", "ph", "med", "cmed", 
+           "emed", "global", "southwest_indian", "map", "list"]
 
 def regionselector(region):
 
@@ -8,14 +17,6 @@ def regionselector(region):
         lon_min = -100
         lon_max = -5
         region = "Atlantic"
-        dataset = "hurdat_atl"
-
-    elif region == "watl":
-        lat_min = 5
-        lat_max = 40
-        lon_min = -105
-        lon_max = -50
-        region = "West Atlantic"
         dataset = "hurdat_atl"
 
     elif region == "gom":
@@ -34,7 +35,7 @@ def regionselector(region):
         region = "Northwest Atlantic"
         dataset = "hurdat_atl"
 
-    elif region == "subtropicalatl":
+    elif region == "subtropatl":
         lat_min = 20
         lat_max = 50
         lon_min = -85
@@ -145,5 +146,38 @@ def regionselector(region):
         lon_max = 90
         region = "South-West Indian Ocean"
         dataset = "jtwc_sh"
+
+    elif region == "map":
+        # Create a single figure for all regions
+        fig = plt.figure(figsize=(16, 10))
+        ax = plt.axes(projection=ccrs.PlateCarree())
+
+        ax.set_extent([-180, 180, -90, 90], crs=ccrs.PlateCarree())
+        ax.add_feature(cfeature.COASTLINE.with_scale('10m'), linewidth=0.5)
+        ax.add_feature(cfeature.BORDERS.with_scale('10m'), linewidth=0.5)
+        ax.add_feature(cfeature.LAND.with_scale('10m'), facecolor='#54B461')
+        ax.add_feature(cfeature.OCEAN.with_scale('10m'), facecolor='#0A0C33')
+
+        # Add all regions to the same plot
+        for reg in regions:
+            if reg != "map" and reg != "list":
+                lat_min, lat_max, lon_min, lon_max, region_name, dataset = regionselector(reg)
+                geom = geometry.box(minx=lon_min, maxx=lon_max, miny=lat_min, maxy=lat_max)
+                ax.add_geometries([geom], crs=ccrs.PlateCarree(), alpha=0.3, 
+                                facecolor='none', edgecolor='red', linewidth=1.5)
+                # Add region label at the center of the box
+                center_lon = (lon_min + lon_max) / 2
+                center_lat = (lat_min + lat_max) / 2
+                ax.text(center_lon, center_lat, reg, 
+                       transform=ccrs.PlateCarree(), 
+                       fontsize=10, ha='center', va='center', color='white')
+        
+        plt.title('All Defined Regions', fontsize=14, fontweight='bold')
+        plt.show()
+        return None, None, None, None, None, None 
+
+    elif region == "list":
+        print(regions)
+        return None, None, None, None, None, None 
 
     return lat_min, lat_max, lon_min, lon_max, region, dataset
