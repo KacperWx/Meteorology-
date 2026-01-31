@@ -140,7 +140,7 @@ def regionselector(region):
         dataset = "all"
 
     elif region == "southwest_indian":
-           lat_min = -40
+        lat_min = -40
         lat_max = 0
         lon_min = 20
         lon_max = 90
@@ -148,12 +148,12 @@ def regionselector(region):
         dataset = "jtwc_sh"
 
     elif region == "mozchannel":
-           lat_min = -25
-           lat_max = -12
-           lon_min = 30
-           lon_max = 48
-           region = "Mozambique Channel"
-           dataset = "jtwc_sh"
+        lat_min = -25
+        lat_max = -12
+        lon_min = 30
+        lon_max = 49
+        region = "Mozambique Channel"
+        dataset = "jtwc_sh"
 
     elif region == "map":
         # Create a single figure for all regions
@@ -189,4 +189,3 @@ def regionselector(region):
         return None, None, None, None, None, None 
 
     return lat_min, lat_max, lon_min, lon_max, region, dataset
-
