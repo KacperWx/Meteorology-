@@ -4,9 +4,9 @@ import cartopy.feature as cfeature
 import cartopy.crs as ccrs
 from shapely import geometry
 
-regions = ["atl", "gom", "nwatl", "nwatl", "subtropatl", 
+regions = ["atl", "gom", "wgom", "nwatl", "nwatl", "subtropatl", 
            "ncatl", "neatl", "carib", "opentropatl", "etropatl", 
-           "aew", "wpac", "ph", "med", "cmed", 
+           "aew", "epac_prop", "epac", "cpac", "wpac", "opentropwpac", "subtropwpac", "scs", "dateline", "northindian", "ph", "med", "cmed", 
            "emed", "global", "southwest_indian", "mozchannel", "map", "list"]
 
 def regionselector(region):
@@ -25,6 +25,14 @@ def regionselector(region):
         lon_min = -105
         lon_max = -75
         region = "Gulf of Mexico"
+        dataset = "hurdat_atl"
+
+    elif region == "wgom":
+        lat_min = 15
+        lat_max = 35
+        lon_min = -105
+        lon_max = -90
+        region = "Western Gulf of Mexico"
         dataset = "hurdat_atl"
 
     elif region == "nwatl":
@@ -91,6 +99,30 @@ def regionselector(region):
         region = "Eastern Tropical Atlantic, Sahel and Southern Sahara"
         dataset = "hurdat_atl"
 
+    elif region == "epac_prop":
+        lat_min = 0
+        lat_max = 30
+        lon_min = -140
+        lon_max = -80
+        region = "Eastern Pacific (east of 140W)"
+        dataset = "hurdat_epa"
+
+    elif region == "epac":
+        lat_min = 0
+        lat_max = 50
+        lon_min = -180
+        lon_max = -80
+        region = "Central and Eastern Pacific"
+        dataset = "hurdat_epa"
+
+    elif region == "cpac":
+        lat_min = 0
+        lat_max = 50
+        lon_min = -180
+        lon_max = -140
+        region = "Central Pacific"
+        dataset = "hurdat_epa"
+
     elif region == "wpac":
         lat_min = 0
         lat_max = 50
@@ -106,6 +138,46 @@ def regionselector(region):
         lon_max = 145
         region = "Philippine Sea"
         dataset = "jtwc_wp"
+
+    elif region == "opentropwpac":
+        lat_min = 0
+        lat_max = 50
+        lon_min = 140
+        lon_max = 180
+        region = "Open Tropical Western Pacific"
+        dataset = "jtwc_wp"
+
+    elif region == "subtropwpac":
+        lat_min = 20
+        lat_max = 45
+        lon_min = 120
+        lon_max = 180
+        region = "Subtropical Western Pacific"
+        dataset = "jtwc_wp"
+
+    elif region == "scs":
+        lat_min = 0
+        lat_max = 25
+        lon_min = 100
+        lon_max = 125
+        region = "South China Sea"
+        dataset = "jtwc_wp"
+
+    elif region == "dateline":
+        lat_min = -20
+        lat_max = 20
+        lon_min = 140
+        lon_max = 220
+        region = "International Date Line"
+        dataset = "all"
+
+    elif region == "northindian":
+        lat_min = 0
+        lat_max = 30
+        lon_min = 40
+        lon_max = 100
+        region = "North Indian Ocean"
+        dataset = "jtwc_io"
 
     elif region == "med":
         lat_min = 30
@@ -171,16 +243,22 @@ def regionselector(region):
             if reg != "map" and reg != "list":
                 lat_min, lat_max, lon_min, lon_max, region_name, dataset = regionselector(reg)
                 geom = geometry.box(minx=lon_min, maxx=lon_max, miny=lat_min, maxy=lat_max)
-                ax.add_geometries([geom], crs=ccrs.PlateCarree(), alpha=0.3, 
-                                facecolor='none', edgecolor='red', linewidth=1.5)
+                ax.add_geometries([geom], crs=ccrs.PlateCarree(), alpha=0.5, 
+                                facecolor='none', edgecolor='white', linewidth=1.5)
                 # Add region label at the center of the box
                 center_lon = (lon_min + lon_max) / 2
                 center_lat = (lat_min + lat_max) / 2
                 ax.text(center_lon, center_lat, reg, 
                        transform=ccrs.PlateCarree(), 
                        fontsize=10, ha='center', va='center', color='white')
+        gl = ax.gridlines(draw_labels=True, linestyle='--', color='white', alpha=0.6)
+        gl.top_labels = False
+        gl.right_labels = False
+
+        for spines in ax.spines:
+          ax.spines[spines].set_visible(False)
         
-        plt.title('All Defined Regions', fontsize=14, fontweight='bold')
+        plt.title('All Defined Regions', fontsize=14, fontweight='bold', loc='left')
         plt.show()
         return None, None, None, None, None, None 
 
@@ -189,3 +267,4 @@ def regionselector(region):
         return None, None, None, None, None, None 
 
     return lat_min, lat_max, lon_min, lon_max, region, dataset
+
